@@ -51,7 +51,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            REMOTE_DIR="/home/${{ secrets.SSH_USER }}/bluegreen/scripts"
+            BASE_DIR="/home/${{ secrets.SSH_USER }}/bluegreen"
+            REMOTE_DIR="$BASE_DIR/scripts"
+            rm -rf "$BASE_DIR"
             mkdir -p "$REMOTE_DIR"
             ls -la "$REMOTE_DIR" || true
 
@@ -64,6 +66,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "scripts/deploy_blue_green.sh"
           target: "/home/${{ secrets.SSH_USER }}/bluegreen/scripts/"
+          strip_components: 1
+          overwrite: true
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -75,7 +79,9 @@ jobs:
           script: |
             REMOTE_DIR="/home/${{ secrets.SSH_USER }}/bluegreen/scripts"
             SCRIPT="$REMOTE_DIR/deploy_blue_green.sh"
+            ALT_SCRIPT="$REMOTE_DIR/scripts/deploy_blue_green.sh"
             ls -la "$REMOTE_DIR"
+            [ -f "$ALT_SCRIPT" ] && SCRIPT="$ALT_SCRIPT"
             chmod +x "$SCRIPT"
             export REGISTRY_USER="${{ github.actor }}"
             export REGISTRY_TOKEN="${{ secrets.REGISTRY_TOKEN }}"
