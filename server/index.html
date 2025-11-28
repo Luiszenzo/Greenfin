@@ -43,7 +43,7 @@
     <script>
       async function setStatus() {
         try {
-          const res = await fetch('/status', { cache: 'no-store' });
+          const res = await fetch('/status?t=' + Date.now(), { cache: 'no-store' });
           const data = await res.json();
           const color = (data && data.color) ? String(data.color).toLowerCase() : 'unknown';
           const title = document.getElementById('title');

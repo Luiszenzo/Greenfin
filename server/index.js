@@ -9,8 +9,9 @@ const publicPath = __dirname;
 app.use(express.static(publicPath));
 
 app.get('/status', (req, res) => {
+  const envColor = (process.env.COLOR || 'unknown').toString().toLowerCase();
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.json({ color, hostname: os.hostname(), envColor: process.env.COLOR || null });
+  res.json({ color: envColor, hostname: os.hostname(), envColor });
 });
 
 app.get('*', (req, res) => {
