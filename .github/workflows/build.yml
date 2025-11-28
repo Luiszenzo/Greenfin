@@ -90,3 +90,5 @@ jobs:
             IMAGE="ghcr.io/${REPO_LC}:${{ github.sha }}"
             "$SCRIPT" "$IMAGE"
 
+ssh -i "C:\Users\Remii\Desktop\bng\luis\Vpskey.pem" ubuntu@18.221.54.49
+

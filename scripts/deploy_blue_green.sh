@@ -11,11 +11,16 @@ ACTIVE_LINK="${UPSTREAM_DIR}/bluegreen_upstream_active.conf"
 BLUE_CONF="${UPSTREAM_DIR}/bluegreen_upstream_blue.conf"
 GREEN_CONF="${UPSTREAM_DIR}/bluegreen_upstream_green.conf"
 
-# Preflight: ensure upstream files exist
-if [ ! -f "$BLUE_CONF" ] || [ ! -f "$GREEN_CONF" ]; then
-  echo "ERROR: Missing Nginx upstream files in $UPSTREAM_DIR"
-  echo "Expected: $BLUE_CONF and $GREEN_CONF"
-  exit 1
+# Preflight: ensure upstream files exist (self-heal)
+sudo mkdir -p "$UPSTREAM_DIR"
+if [ ! -f "$BLUE_CONF" ]; then
+  echo "set \$app_upstream http://127.0.0.1:3000;" | sudo tee "$BLUE_CONF" >/dev/null
+fi
+if [ ! -f "$GREEN_CONF" ]; then
+  echo "set \$app_upstream http://127.0.0.1:4000;" | sudo tee "$GREEN_CONF" >/dev/null
+fi
+if [ ! -L "$ACTIVE_LINK" ]; then
+  sudo ln -sfn "$BLUE_CONF" "$ACTIVE_LINK"
 fi
 
 # Detección del color activo
