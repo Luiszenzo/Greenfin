@@ -3,13 +3,13 @@ const path = require('path');
 const os = require('os');
 
 const app = express();
-const color = process.env.COLOR || 'unknown';
+const color = process.env.BG_COLOR || 'unknown';
 
 const publicPath = __dirname;
 app.use(express.static(publicPath));
 
 app.get('/status', (req, res) => {
-  const envColor = (process.env.COLOR || 'unknown').toString().toLowerCase();
+  const envColor = (process.env.BG_COLOR || 'unknown').toString().toLowerCase();
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.json({ color: envColor, hostname: os.hostname(), envColor });
 });

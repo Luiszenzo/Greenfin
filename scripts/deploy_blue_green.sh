@@ -67,7 +67,7 @@ docker rm "$CONTAINER_NAME" || true
 
 # Run container: bind host port to container's 3000
 docker run -d --name "$CONTAINER_NAME" --restart=always \
-  -e COLOR="$DEPLOY_COLOR" \
+  -e BG_COLOR="$DEPLOY_COLOR" \
   -p 127.0.0.1:${FRONT_PORT}:3000 \
   "$IMAGE_TAG"
 
