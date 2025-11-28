@@ -38,6 +38,7 @@
     <div class="card">
       <h1 id="title">Estado: UNKNOWN</h1>
       <div class="chip" id="chip">Cargando...</div>
+      <div id="meta" style="margin-top:0.5rem;font-size:0.9rem;opacity:0.8"></div>
     </div>
     <script>
       async function setStatus() {
@@ -47,6 +48,7 @@
           const color = (data && data.color) ? String(data.color).toLowerCase() : 'unknown';
           const title = document.getElementById('title');
           const chip = document.getElementById('chip');
+          const meta = document.getElementById('meta');
 
           const isBlue = color === 'blue';
           const isGreen = color === 'green';
@@ -54,10 +56,13 @@
           document.body.style.background = isBlue ? '#1976d2' : isGreen ? '#2e7d32' : '#9e9e9e';
           title.textContent = 'Estado: ' + (color || 'unknown').toUpperCase();
           chip.textContent = isBlue ? 'BLUE' : isGreen ? 'GREEN' : 'UNKNOWN';
+          meta.textContent = `host: ${data.hostname || '-'} | envColor: ${data.envColor || '-'}`;
         } catch (e) {
           document.body.style.background = '#9e9e9e';
           document.getElementById('title').textContent = 'Estado: UNKNOWN';
           document.getElementById('chip').textContent = 'Sin respuesta';
+          const meta = document.getElementById('meta');
+          if (meta) meta.textContent = '';
         }
       }
       setStatus();
