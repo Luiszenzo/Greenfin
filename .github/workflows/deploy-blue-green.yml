@@ -49,3 +49,5 @@ jobs:
             REPO_LC="$(echo "$REPO" | tr '[:upper:]' '[:lower:]')"
             IMAGE="ghcr.io/${REPO_LC}:${{ github.sha }}"
             $HOME/nutritrack/scripts/deploy_blue_green.sh "$IMAGE"
+
+            
