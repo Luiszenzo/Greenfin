@@ -1,30 +1,20 @@
 {
-  "name": "nutritrack",
+  "name": "blue-green-project",
   "version": "1.0.0",
-  "description": "Aplicación PWA para seguimiento nutricional",
+  "description": "Página de estado de despliegue Blue-Green",
   "main": "index.js",
   "scripts": {
-    "dev:client": "cd client && npm run dev",
-    "dev:server": "json-server --watch server/db.json --port 3001",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "install:all": "npm install && cd client && npm install",
-    "build": "cd client && npm run build",
-    "start": "concurrently \"json-server --watch server/db.json --host 0.0.0.0 --port 3001\" \"cd client && vite preview --port 3000 --strictPort --host 0.0.0.0\""
+    "start": "node server/index.js"
   },
   "keywords": [
-    "pwa",
-    "nutrition",
-    "tracking",
-    "offline"
+    "blue-green",
+    "deployment",
+    "status",
+    "infra"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
-    "concurrently": "^8.2.0",
-    "json-server": "^0.17.3",
-    "quagga": "^0.12.1",
-    "vite": "^7.1.7",
-    "vue": "^3.5.22"
+    "express": "^4.19.2"
   }
 }

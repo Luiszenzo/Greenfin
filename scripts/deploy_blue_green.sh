@@ -6,10 +6,10 @@ IMAGE_TAG="${1:-ghcr.io/owner/repo:latest}"
 IMAGE_TAG="$(echo "$IMAGE_TAG" | tr '[:upper:]' '[:lower:]')"
 
 # Paths Nginx
-UPSTREAM_DIR="/etc/nginx/nutritrack"
-ACTIVE_LINK="${UPSTREAM_DIR}/nutritrack_upstream_active.conf"
-BLUE_CONF="${UPSTREAM_DIR}/nutritrack_upstream_blue.conf"
-GREEN_CONF="${UPSTREAM_DIR}/nutritrack_upstream_green.conf"
+UPSTREAM_DIR="/etc/nginx/bluegreen"
+ACTIVE_LINK="${UPSTREAM_DIR}/bluegreen_upstream_active.conf"
+BLUE_CONF="${UPSTREAM_DIR}/bluegreen_upstream_blue.conf"
+GREEN_CONF="${UPSTREAM_DIR}/bluegreen_upstream_green.conf"
 
 # Preflight: ensure upstream files exist
 if [ ! -f "$BLUE_CONF" ] || [ ! -f "$GREEN_CONF" ]; then
@@ -33,19 +33,15 @@ fi
 if [ "$ACTIVE_COLOR" == "blue" ]; then
   DEPLOY_COLOR="green"
   FRONT_PORT=4000
-  API_PORT=4001
-  CONTAINER_NAME="nutritrack-green"
+  CONTAINER_NAME="bluegreen-green"
 elif [ "$ACTIVE_COLOR" == "green" ]; then
   DEPLOY_COLOR="blue"
   FRONT_PORT=3000
-  API_PORT=3001
-  CONTAINER_NAME="nutritrack-blue"
+  CONTAINER_NAME="bluegreen-blue"
 else
-  # Primer despliegue: usar blue
   DEPLOY_COLOR="blue"
   FRONT_PORT=3000
-  API_PORT=3001
-  CONTAINER_NAME="nutritrack-blue"
+  CONTAINER_NAME="bluegreen-blue"
 fi
 
 echo "Activo: $ACTIVE_COLOR, desplegando: $DEPLOY_COLOR, contenedor: $CONTAINER_NAME"
@@ -60,15 +56,15 @@ docker pull "$IMAGE_TAG"
 docker stop "$CONTAINER_NAME" || true
 docker rm "$CONTAINER_NAME" || true
 
-# Run container: bind host ports to container's fixed ports (3000/3001)
+# Run container: bind host port to container's 3000
 docker run -d --name "$CONTAINER_NAME" --restart=always \
+  -e COLOR="$DEPLOY_COLOR" \
   -p 127.0.0.1:${FRONT_PORT}:3000 \
-  -p 127.0.0.1:${API_PORT}:3001 \
   "$IMAGE_TAG"
 
 # Health-check frontend
 for i in {1..30}; do
-  if curl -fs "http://127.0.0.1:${FRONT_PORT}" >/dev/null; then
+  if curl -fs "http://127.0.0.1:${FRONT_PORT}/status" >/dev/null; then
     echo "Health-check OK en puerto ${FRONT_PORT}"
     break
   fi

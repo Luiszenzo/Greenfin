@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            mkdir -p /home/${{ secrets.SSH_USER }}/nutritrack
+            mkdir -p /home/${{ secrets.SSH_USER }}/bluegreen/scripts
 
       - name: Upload deploy script
         uses: appleboy/scp-action@v0.1.7
@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "scripts/deploy_blue_green.sh"
-          target: "/home/${{ secrets.SSH_USER }}/nutritrack"
+          target: "/home/${{ secrets.SSH_USER }}/bluegreen/scripts/"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -42,12 +42,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            chmod +x $HOME/nutritrack/scripts/deploy_blue_green.sh
+            chmod +x $HOME/bluegreen/scripts/deploy_blue_green.sh
             export REGISTRY_USER="${{ github.actor }}"
             export REGISTRY_TOKEN="${{ secrets.REGISTRY_TOKEN }}"
             REPO="${{ github.repository }}"
             REPO_LC="$(echo "$REPO" | tr '[:upper:]' '[:lower:]')"
             IMAGE="ghcr.io/${REPO_LC}:${{ github.sha }}"
-            $HOME/nutritrack/scripts/deploy_blue_green.sh "$IMAGE"
+            $HOME/bluegreen/scripts/deploy_blue_green.sh "$IMAGE"
 
             
