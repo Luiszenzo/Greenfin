@@ -12,15 +12,15 @@ BLUE_CONF="${UPSTREAM_DIR}/bluegreen_upstream_blue.conf"
 GREEN_CONF="${UPSTREAM_DIR}/bluegreen_upstream_green.conf"
 
 # Preflight: ensure upstream files exist (self-heal)
-sudo mkdir -p "$UPSTREAM_DIR"
+echo "$SUDO_PASS" | sudo -S mkdir -p "$UPSTREAM_DIR"
 if [ ! -f "$BLUE_CONF" ]; then
-  echo "set \$app_upstream http://127.0.0.1:3000;" | sudo tee "$BLUE_CONF" >/dev/null
+  echo "$SUDO_PASS" | sudo -S bash -c "echo 'set \$app_upstream http://127.0.0.1:3000;' > '$BLUE_CONF'"
 fi
 if [ ! -f "$GREEN_CONF" ]; then
-  echo "set \$app_upstream http://127.0.0.1:4000;" | sudo tee "$GREEN_CONF" >/dev/null
+  echo "$SUDO_PASS" | sudo -S bash -c "echo 'set \$app_upstream http://127.0.0.1:4000;' > '$GREEN_CONF'"
 fi
 if [ ! -L "$ACTIVE_LINK" ]; then
-  sudo ln -sfn "$BLUE_CONF" "$ACTIVE_LINK"
+  echo "$SUDO_PASS" | sudo -S ln -sfn "$BLUE_CONF" "$ACTIVE_LINK"
 fi
 
 # Detección del color activo
@@ -79,14 +79,14 @@ done
 
 # Alternar upstream activo (requires sudo in /etc/nginx)
 if [ "$DEPLOY_COLOR" == "blue" ]; then
-  sudo ln -sfn "$BLUE_CONF" "$ACTIVE_LINK"
+  echo "$SUDO_PASS" | sudo -S ln -sfn "$BLUE_CONF" "$ACTIVE_LINK"
 else
-  sudo ln -sfn "$GREEN_CONF" "$ACTIVE_LINK"
+  echo "$SUDO_PASS" | sudo -S ln -sfn "$GREEN_CONF" "$ACTIVE_LINK"
 fi
 
 # Recargar Nginx
-sudo nginx -t
-sudo systemctl restart nginx
+echo "$SUDO_PASS" | sudo -S nginx -t
+echo "$SUDO_PASS" | sudo -S systemctl restart nginx
 
 echo "Blue-Green alternado a ${DEPLOY_COLOR}. Nginx recargado."
 # Opcional: parar contenedor del color anterior (rollback más difícil si se detiene)

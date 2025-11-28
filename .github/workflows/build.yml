@@ -85,6 +85,7 @@ jobs:
             chmod +x "$SCRIPT"
             export REGISTRY_USER="${{ github.actor }}"
             export REGISTRY_TOKEN="${{ secrets.REGISTRY_TOKEN }}"
+            export SUDO_PASS="${{ secrets.SUDO_PASS }}"
             REPO="${{ github.repository }}"
             REPO_LC="$(echo "$REPO" | tr '[:upper:]' '[:lower:]')"
             IMAGE="ghcr.io/${REPO_LC}:${{ github.sha }}"
