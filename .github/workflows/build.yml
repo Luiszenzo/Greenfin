@@ -82,6 +82,8 @@ jobs:
             ALT_SCRIPT="$REMOTE_DIR/scripts/deploy_blue_green.sh"
             ls -la "$REMOTE_DIR"
             [ -f "$ALT_SCRIPT" ] && SCRIPT="$ALT_SCRIPT"
+            whoami && id
+            sudo -n true || { echo "sudo NOPASSWD no configurado para $(whoami)"; exit 1; }
             chmod +x "$SCRIPT"
             export REGISTRY_USER="${{ github.actor }}"
             export REGISTRY_TOKEN="${{ secrets.REGISTRY_TOKEN }}"
