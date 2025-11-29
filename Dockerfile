@@ -2,20 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar package.json primero (para mejor cache de Docker)
+# Copiar package.json primero
 COPY package*.json ./
 
 # Instalar dependencias
 RUN npm install --production
 
-# Copiar TODOS los archivos del proyecto
-COPY . .
+# Copiar archivos del servidor (desde la carpeta server/)
+COPY server/ ./
 
 # Exponer puerto
 EXPOSE 3000
-
-# Variable de entorno
-ENV BG_COLOR=blue
 
 # Comando para ejecutar
 CMD ["node", "index.js"]
