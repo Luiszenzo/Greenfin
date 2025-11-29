@@ -1,11 +1,10 @@
+# Verifica que estés copiando todos los archivos
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar archivos del proyecto
-COPY package*.json ./
-COPY *.js ./
-COPY *.html ./
+# Copiar TODOS los archivos (ajusta según necesites)
+COPY . .
 
 RUN npm install --production
 
