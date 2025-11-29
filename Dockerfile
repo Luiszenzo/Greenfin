@@ -1,17 +1,14 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiamos package.json de raíz y del cliente para instalar deps en caché
-COPY package.json package-lock.json ./
+# Copiar archivos del proyecto
+COPY package*.json ./
+COPY *.js ./
+COPY *.html ./
 
-# Instalación de dependencias
-RUN npm ci
-
-# Copiamos el resto del código
-COPY . .
+RUN npm install --production
 
 EXPOSE 3000
 
-# Arrancamos ambos servicios en paralelo
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
