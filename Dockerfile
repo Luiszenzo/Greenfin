@@ -3,8 +3,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar TODOS los archivos (ajusta según necesites)
-COPY . .
+# Copiar archivos del proyecto
+COPY package*.json ./
+COPY *.js ./
+COPY *.html ./
 
 RUN npm install --production
 
